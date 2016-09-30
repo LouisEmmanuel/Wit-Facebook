@@ -69,7 +69,7 @@ const actions = {
   },
 
   // fetch-weather bot executes
-  ['fetchSymbol'](sessionId, context, cb) {
+  fetchSymbol(sessionId, context, cb) {
     // Here should go the api call, e.g.:
     // context.forecast = apiCall(context.loc)
     context.symbol = 'GOOG.Q';
