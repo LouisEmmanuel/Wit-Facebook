@@ -69,10 +69,11 @@ const actions = {
   },
 
   // fetch-weather bot executes
-  ['fetch-weather'](sessionId, context, cb) {
+  ['fetchSymbol'](sessionId, context, cb) {
     // Here should go the api call, e.g.:
     // context.forecast = apiCall(context.loc)
-    context.forecast = 'sunny';
+    context.symbol = 'GOOG.Q';
+	context.entreprise = firstEntityValue(entities, 'enterprise');
     cb(context);
   },
 };
