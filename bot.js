@@ -5,17 +5,25 @@
 const Wit = require('node-wit').Wit;
 const FB = require('./facebook.js');
 const Config = require('./const.js');
+const async = require('async');
 
-const firstEntityValue = (entities, entity) => {
-  const val = entities && entities[entity] &&
-    Array.isArray(entities[entity]) &&
-    entities[entity].length > 0 &&
-    entities[entity][0].value;
-  if (!val) {
-    return null;
-  }
-  return typeof val === 'object' ? val.value : val;
+
+// Helper function to get the first message
+const firstEntityValue = (entity) => {
+    const val = entity && Array.isArray(entity) &&
+            entity.length > 0 &&
+            entity[0].value
+        ;
+    if (!val) {
+        return null;
+    }
+    return typeof val === 'object' ? val.value : val;
 };
+
+
+
+
+
 
 // Bot actions
 const actions = {
@@ -54,27 +62,56 @@ const actions = {
       cb();
     }
   },
+  
   merge(sessionId, context, entities, message, cb) {
-    // Retrieve the location entity and store it into a context field
-    const loc = firstEntityValue(entities, 'location');
-    if (loc) {
-      context.loc = loc; // store it in context
-    }
+		console.log("entities before merge:\n", entities);
+        async.forEachOf(entities, (entity, key, cb) => {
+            const value = firstEntityValue(entity);
+            //console.error("Result", key, value);
+            if (value != null && (context[key] == null || context[key] != value)) {
 
-    cb(context);
-  },
+                switch (key) {
+                    default:
+                        cb();
+                }
+            }
+            else
+                cb();
 
-  error(sessionId, context, error) {
-    console.log(error.message);
-  },
+        }, (error) => {
+            if (error) {
+                console.error(error);
+            } else {
+                console.log("Context after merge:\n", context);
+                cb(context);
+            }
+        });
+    },
+
+	error(recipientId, context, error) {
+        console.log(error.message);
+    },
+
+    /**** Add your own functions HERE ******/
 
   // fetch-weather bot executes
-  fetchSymbol(sessionId, context, cb) {
+  fetchSymbol(sessionId, context, callback) {
     // Here should go the api call, e.g.:
     // context.forecast = apiCall(context.loc)
-    context.symbol = 'GOOG.Q';
-	context.entreprise = firstEntityValue(entities, 'enterprise');
-    cb(context);
+	console.log('Context', context);
+    return new Promise(function(resolve, reject) {
+      var entreprise = firstEntityValue(context)
+      if (entreprise) {
+		context.symbol = 'Goog' ; // we should call an API here
+        delete context.missingSymbol;
+		console.log('Context', context);
+      } else {
+        context.missingSymbol = true;
+        delete context.symbol;
+		console.log('Context', context);
+      }
+      return resolve(context);
+	});
   },
 };
 
