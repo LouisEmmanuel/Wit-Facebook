@@ -1,1 +1,1 @@
-web: node bot3.js
+web: node bot-server.js ELPQKRCKFJKBXPFSRRZ22KCXQFQ4AR3X
