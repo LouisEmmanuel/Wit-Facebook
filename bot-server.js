@@ -37,7 +37,7 @@ const actions = {
     return Promise.resolve();
   },
 
-  cancelOrder({context, entities}) {
+  cancelOrder(context, entities) {
     //console.log("------ Cancellation Function Called ! ---------");
     //console.log("Order No : " ,JSON.stringify(entities));
     try {
@@ -74,7 +74,7 @@ const actions = {
     return Promise.resolve();
   },
 
-  getOrderStatus({context, entities}) {
+  getOrderStatus(context, entities) {
     //console.log("------ Order Status Function Called ! ---------");
     //console.log("Order No : " ,JSON.stringify(entities));
     //console.log("Processing your order Information...");
@@ -106,7 +106,7 @@ const actions = {
     return Promise.resolve();
   },
 
-  validatePhone({context, entities}) {
+  validatePhone(context, entities) {
       var regex = /^\d{10}$/;
       if (regex.test(entities["phone_number"][0]["value"])) {
         console.log("phone number is valid");
@@ -117,7 +117,7 @@ const actions = {
       }
   },
 
-    getEligibleOrders({context, entities}) {
+    getEligibleOrders(context, entities) {
     try {
         var phone = entities["phone_number"][0]["value"];
         var request =  {
@@ -154,7 +154,7 @@ const actions = {
     }
     return Promise.resolve();
   },
-  deliveryEstimate({context, entities}) {
+  deliveryEstimate(context, entities) {
         //console.log("------ Delivery Estimate Function Called ! ---------");
         //console.log("Order No : " ,JSON.stringify(entities));
         try {
@@ -218,6 +218,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
