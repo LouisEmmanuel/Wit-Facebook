@@ -1,0 +1,237 @@
+<html>
+<head>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+  <style>
+
+body {
+  background: #e9e9e9;
+  color: #9a9a9a;
+  font: 100%/1.5em "Droid Sans", sans-serif;
+  margin: 0;
+}
+
+a { text-decoration: none; }
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+h4, h5 {
+  line-height: 1.5em;
+  margin: 0;
+}
+
+hr {
+  background: #e9e9e9;
+    border: 0;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 1px;
+    margin: 0;
+    min-height: 1px;
+}
+
+img {
+    border: 0;
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+input {
+  border: 0;
+  color: inherit;
+    font-family: inherit;
+    font-size: 100%;
+    line-height: normal;
+    margin: 0;
+}
+
+p { margin: 0; }
+
+.clearfix { *zoom: 1; } /* For IE 6/7 */
+.clearfix:before, .clearfix:after {
+    content: "";
+    display: table;
+}
+.clearfix:after { clear: both; }
+
+/* ---------- LIVE-CHAT ---------- */
+
+#live-chat {
+  bottom: 0;
+  font-size: 12px;
+  right: 24px;
+  position: fixed;
+  width: 300px;
+}
+
+#live-chat header {
+  background: #293239;
+  border-radius: 5px 5px 0 0;
+  color: #fff;
+  cursor: pointer;
+  padding: 16px 24px;
+}
+
+#live-chat h4:before {
+  background: #1a8a34;
+  border-radius: 50%;
+  content: "";
+  display: inline-block;
+  height: 8px;
+  margin: 0 8px 0 0;
+  width: 8px;
+}
+
+#live-chat h4 {
+  font-size: 12px;
+}
+
+#live-chat h5 {
+  font-size: 10px;
+}
+
+#live-chat form {
+  padding: 24px;
+}
+
+#live-chat input[type="text"] {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 8px;
+  outline: none;
+  width: 90%;
+  margin-bottom: 10px;
+}
+
+.chat-message-counter {
+  background: #e62727;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  height: 28px;
+  left: 0;
+  line-height: 28px;
+  margin: -15px 0 0 -15px;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 28px;
+}
+
+.chat-close {
+  background: #1b2126;
+  border-radius: 50%;
+  color: #fff;
+  display: block;
+  float: right;
+  font-size: 10px;
+  height: 16px;
+  line-height: 16px;
+  margin: 2px 0 0 0;
+  text-align: center;
+  width: 16px;
+}
+
+.chat {
+  background: #fff;
+  display: none;
+}
+
+.chat-history {
+  height: 252px;
+  padding: 8px 24px;
+  overflow-y: scroll;
+}
+
+.chat-message {
+  margin: 16px 0;
+}
+
+.chat-message img {
+  border-radius: 50%;
+  float: left;
+}
+
+.chat-message-content {
+  margin-left: 56px;
+}
+
+.chat-time {
+  float: right;
+  font-size: 10px;
+}
+
+.chat-feedback {
+  display: none;
+}
+  </style>
+
+</head>
+<script type="text/javascript">
+
+  function setMessage(value) {
+    $('#btn-input').val(value);
+  }
+
+  function openLiveChatHeader () {
+    $('.chat').slideToggle(300, 'swing');
+    $('.chat-message-counter').fadeToggle(300, 'swing');
+    var list =  document.getElementById('chat-list-'+i);
+    list.scrollIntoView();
+  }
+      var i=0;
+      var socket = io();
+      function send() {
+          i++;
+          $('.chat-feedback').show();
+          var msg = $('#btn-input').val();
+          var time  = new Date();
+          socket.emit('chat message', $('#btn-input').val());
+          $('#chat-id').append('<div id="chat-list-'+i+'" class="chat-message clearfix"><img src="/people-512.png" alt="" width="32" height="32"><div class="chat-message-content clearfix"><span class="chat-time"></span><h5>Customer</h5> <p>'+msg+'</p> </div></div><hr>');
+          $('#btn-input').val('');
+          var list =  document.getElementById('chat-list-'+i);
+          list.scrollIntoView();
+          return false;
+      }
+
+
+      socket.on('chat message', function(msg){
+        i++;
+        $('.chat-feedback').hide();
+        $('#chat-id').append('<div  id="chat-list-'+i+'" class="chat-message clearfix"><img src="/bot-de-telegram.jpg" alt="" width="32" height="32"><div class="chat-message-content clearfix"><span class="chat-time"></span><h5>BotGenie</h5> <p>'+msg+'</p> </div></div><hr>');
+        var list =  document.getElementById('chat-list-'+i);
+        list.scrollIntoView();
+      });
+
+</script>
+<body>
+  <div id="live-chat">
+    <header class="clearfix" onclick="openLiveChatHeader()">
+      <h4>BotGenie</h4>
+      <span class="chat-message-counter">1</span>
+    </header>
+
+    <div class="chat">
+      <div id="chat-id" class="chat-history">
+        <div  id="chat-list-0" class="chat-message clearfix"><img src="/bot-de-telegram.jpg" alt="" width="32" height="32"/><div class="chat-message-content clearfix"><span class="chat-time"></span><h5>BotGenie</h5> <p>Hey, This is BotGenie, How may I help you?</p> </div></div><hr>
+      </div>
+      <div align="center">
+       <img class="chat-feedback" src="/hex-loader2.gif" alt="" width="40" height="40"/>
+       <div class="clearfix">
+        <input id="btn-input" type="text" onkeydown = "if (event.keyCode == 13)
+        send()" class="form-control input-sm" placeholder="Type your message here..." autofocus/>
+      </div>
+    </div>
+
+  </div>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+</body>
+</html>
+
+
