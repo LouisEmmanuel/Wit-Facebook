@@ -1,1 +1,1 @@
-web: node bot-server.js
+web: node bot3.js
